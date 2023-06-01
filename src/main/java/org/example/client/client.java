@@ -10,9 +10,10 @@ import org.example.api.MasterClientService;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class client {
-    static String Master_IpAddress="zookeeper://127.0.0.1:2181";
+    static String ZOOKEEPER_ADDRESS="";
     static String Application_Name="client-service-caller";
 
 
@@ -123,13 +124,31 @@ public class client {
     }
 
     public void run() throws IOException {
+
+        Properties props = new Properties();
+        String ZOOKEEPER_HOST = "", ZOOKEEPER_PORT = "";
+        try {
+            // 从文件中读取配置信息
+            FileInputStream fis = new FileInputStream("config.properties");
+            props.load(fis);
+            fis.close();
+
+            // 获取属性值
+            ZOOKEEPER_HOST = props.getProperty("zookeeper.address");
+            ZOOKEEPER_PORT = props.getProperty("zookeeper.port");
+            ZOOKEEPER_ADDRESS = "zookeeper://" + ZOOKEEPER_HOST + ":" + ZOOKEEPER_PORT;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
         // 连master
         ReferenceConfig<MasterClientService> reference = new ReferenceConfig<>();
         reference.setInterface(MasterClientService.class);
 
         DubboBootstrap.getInstance()
                 .application(Application_Name)
-                .registry(new RegistryConfig(Master_IpAddress))
+                .registry(new RegistryConfig(ZOOKEEPER_ADDRESS))
                 .reference(reference);
         //Input From the User-----
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "WARN");
