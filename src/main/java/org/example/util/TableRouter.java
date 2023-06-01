@@ -113,21 +113,22 @@ public class TableRouter {
 
     public void addRegionServer(String regionId, String server) {
         if(!Regions.containsKey(regionId)) {
-            System.out.println("new region " + regionId);
-            System.out.println("servers:");
-            String[] ServerIdAndIps = server.split(",");
-            List<String> serverIps = new ArrayList<>();
-            for(int i = 0; i < ServerIdAndIps.length; i++) {
-                String[] ids = ServerIdAndIps[i].split(":");
-                String ipPort = ids[1]+":"+ids[2];
-                serverIps.add(ipPort);
-                System.out.println(ipPort);
-            }
             RegionTables.put(regionId, new HashSet<>());
-            Regions.put(regionId, serverIps);
             WriteTable();
-            WriteRegion();
         }
+        System.out.print("new region " + regionId);
+        System.out.println(", servers:");
+        String[] ServerIdAndIps = server.split(",");
+        List<String> serverIps = new ArrayList<>();
+        for(int i = 0; i < ServerIdAndIps.length; i++) {
+            String[] ids = ServerIdAndIps[i].split(":");
+            String ipPort = ids[1]+":"+ids[2];
+            serverIps.add(ipPort);
+            System.out.print(ipPort + " ");
+        }
+        System.out.println("");
+        Regions.put(regionId, serverIps);
+        WriteRegion();
     }
 
     public List<String> getServersOfTable(String table) {

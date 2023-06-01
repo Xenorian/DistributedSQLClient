@@ -10,14 +10,34 @@ import org.apache.dubbo.config.bootstrap.DubboBootstrap;
 import org.example.api.*;
 import org.example.util.TableRouter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import java.util.ServiceConfigurationError;
 
 public class MasterServer {
-    private static final String ZOOKEEPER_HOST = System.getProperty("zookeeper.address", "127.0.0.1");
-    private static final String ZOOKEEPER_PORT = System.getProperty("zookeeper.port", "2181");
-    private static final String ZOOKEEPER_ADDRESS = "zookeeper://" + ZOOKEEPER_HOST + ":" + ZOOKEEPER_PORT;
 
     public void run() {
+
+        Properties props = new Properties();
+        String ZOOKEEPER_HOST = "", ZOOKEEPER_PORT = "", ZOOKEEPER_ADDRESS = "";
+        try {
+            // 从文件中读取配置信息
+            FileInputStream fis = new FileInputStream("config.properties");
+            props.load(fis);
+            fis.close();
+
+            // 获取属性值
+            ZOOKEEPER_HOST = props.getProperty("zookeeper.address");
+            ZOOKEEPER_PORT = props.getProperty("zookeeper.port");
+            ZOOKEEPER_ADDRESS = "zookeeper://" + ZOOKEEPER_HOST + ":" + ZOOKEEPER_PORT;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
         System.out.println(ZOOKEEPER_ADDRESS);
 
         ServiceConfig<MasterClientService> clientService = new ServiceConfig<>();
