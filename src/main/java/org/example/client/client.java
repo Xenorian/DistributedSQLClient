@@ -55,6 +55,10 @@ public class client {
             result = (Map<String, GetRegionServerResp>)objectInputStream.readObject();
             fileInputStream.close();
             objectInputStream.close();
+
+//            for (Map.Entry<String,GetRegionServerResp> entry : result.entrySet()) {
+//                System.out.println(entry.getKey() + ": " + entry.getValue().Region + entry.getValue().Peers);
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -194,13 +198,16 @@ public class client {
                     peers = resp.Peers;
                     System.out.println(raftGroupId + " " + peers);
                     AddTable(resp, table_name);
+                }else{
+                    raftGroupId = resp.Region;
+                    peers = resp.Peers;
                 }
 //                 using gRPC to connect the RegionServer
             }
 
             try {
-                System.out.println("raftGroupId:" + raftGroupId);
-                System.out.println("peers:" + peers);
+//                System.out.println("raftGroupId:" + raftGroupId);
+//                System.out.println("peers:" + peers);
                 Client test = new Client(raftGroupId, peers);
 
                 test.run();

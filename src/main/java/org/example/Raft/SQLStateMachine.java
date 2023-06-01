@@ -53,6 +53,7 @@ public class SQLStateMachine extends BaseStateMachine {
         super.initialize(server, groupId, raftStorage);
         this.storage.init(raftStorage);
         loadSnapshot(storage.getLatestSnapshot());
+        SQLStorage.ClearDatabase();
     }
 
     @Override

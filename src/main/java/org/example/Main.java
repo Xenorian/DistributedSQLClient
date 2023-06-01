@@ -17,11 +17,11 @@ public class Main {
 //        RegionServer mst = new RegionServer();
 //        mst.run();
 
-        MasterServer master = new MasterServer();
-        master.run();
+//        MasterServer master = new MasterServer();
+//        master.run();
 
-//        client my_client = new client();
-//        my_client.run();
+        client my_client = new client();
+        my_client.run();
 
     }
 }
